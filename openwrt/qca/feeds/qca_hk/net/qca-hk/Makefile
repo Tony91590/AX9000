@@ -15,22 +15,23 @@ PKG_MD5SUM:=skip
 
 include $(INCLUDE_DIR)/package.mk
 
-#PKG_CMN_NAME:=fwcommon
-#PKG_CMN_SOURCE:=qca-wifi-fw-src-component-cmn-$(PKG_VERSION).tgz
+PKG_CMN_NAME:=fwcommon
+PKG_CMN_SOURCE:=qca-wifi-fw-src-component-cmn-$(PKG_VERSION).tgz
 
-#define Download/fwcommon
-#  FILE:=$(PKG_CMN_SOURCE)
-#  VERSION:=$(PKG_VERSION)
-#  URL:=$(PKG_SOURCE_URL)
-#  MD5SUM:=skip
-#endef
-#$(eval $(call Download,fwcommon))
+define Download/fwcommon
+  FILE:=$(PKG_CMN_SOURCE)
+  VERSION:=$(PKG_VERSION)
+  URL:=$(PKG_SOURCE_URL)
+  MD5SUM:=skip
+endef
+$(eval $(call Download,fwcommon))
 
-#PKG_FW_CMN:=qca-wifi-fw-src-component-cmn-$(PKG_VERSION).tgz
+PKG_FW_CMN:=qca-wifi-fw-src-component-cmn-$(PKG_VERSION).tgz
 
-#define Build/Prepare
-#	$(TAR) xzvf $(TOPDIR)/dl/$(PKG_FW_CMN) -C $(TOPDIR)/dl
-#endef
+define Build/Prepare
+        rm -rf $(TOPDIR)/dl/wlan/$PKG_CMN_NAME
+	$(TAR) xzvf $(TOPDIR)/dl/$(PKG_FW_CMN) -C $(TOPDIR)/dl
+endef
 
 
 define WifiFirmware
@@ -40,7 +41,7 @@ define WifiFirmware
     URL:=http://www.qca.qualcomm.com
     MAINTAINER:=Qualcomm Atheros
     TITLE:=QCA Wifi Firmware$(1)
-    DEPENDS:=@!TARGET_ipq_ipq60xx @!TARGET_ipq_ipq60xx_64
+    DEPENDS:=@!TARGET_ipq_ipq60xx @!TARGET_ipq_ipq60xx_64 @!TARGET_ipq60xx
     VARIANT:=$(2)
     PKGARCH:=all
   endef
@@ -50,8 +51,7 @@ define WifiFirmware
   endef
 
   define Package/$(PKG_NAME)-hw1-10.4-asic/install
-	$(INSTALL_DIR) $$(1)/lib/firmware/$(3)/WIFI_FW/
-	$(CP) files/firmware/* $$(1)/lib/firmware/$(3)/WIFI_FW/
+	true
   endef
 
   $$(eval $$(call BuildPackage,$(PKG_NAME)$(1)))
@@ -59,4 +59,4 @@ endef
 
 Build/Compile=true
 
-$(eval $(call WifiFirmware,-hw1-10.4-asic,-QCAHK_hw_1,IPQ8074))
+$(eval $(call WifiFirmware,-hw1-10.4-asic,-QCAHK_hw_1,QCA8074))
