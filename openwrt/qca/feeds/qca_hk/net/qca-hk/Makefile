@@ -51,7 +51,8 @@ define WifiFirmware
   endef
 
   define Package/$(PKG_NAME)-hw1-10.4-asic/install
-	true
+	$(INSTALL_DIR) $$(1)/lib/firmware/$(3)/WIFI_FW/
+	$(CP) files/firmware/* $$(1)/lib/firmware/$(3)/WIFI_FW/
   endef
 
   $$(eval $$(call BuildPackage,$(PKG_NAME)$(1)))
